@@ -33,8 +33,6 @@ public class ChessMatch {
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
 	private List<Piece> capturedPieces = new ArrayList<>();
 
-	ObjectMapper mapper = new ObjectMapper();
-	
 	public ChessMatch(Player playerOne, Player playerTwo)  {
 		this.playerOne = playerOne;
 		this.playerTwo = playerTwo;
@@ -42,22 +40,18 @@ public class ChessMatch {
 		this.turn = 1;
 		this.currentPlayer = Color.WHITE;
 		initialSetup();
-
-		try {
-			String json = mapper.writeValueAsString(piecesOnTheBoard);
-			playerOne.sendMessage(json);
-			playerTwo.sendMessage(json);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public int getTurn() {
 		return turn;
 	}
 	
-	public Color getCurrentPlayer() {
-		return currentPlayer;
+	public Player getCurrentPlayer() {
+		return this.turn % 2 == 0 ? this.playerTwo : this.playerOne;
+	}
+
+	public Player getNextPlayer() {
+		return this.turn % 2 == 0 ? this.playerOne : this.playerTwo;
 	}
 	
 	public boolean getCheck() {
@@ -101,7 +95,7 @@ public class ChessMatch {
 		
 		if (testCheck(currentPlayer)) {
 			undoMove(source, target, capturedPiece);
-			throw new ChessException("You can't put yourself in check");
+			throw new ChessException("Você não pode se colocar em cheque");
 		}
 		
 		ChessPiece movedPiece = (ChessPiece)board.piece(target);
@@ -137,7 +131,7 @@ public class ChessMatch {
 
 	public ChessPiece replacePromotedPiece(String type) {
 		if (promoted == null) {
-			throw new IllegalStateException("There is no piece to be promoted");
+			throw new IllegalStateException("Não há nenhuma peça a ser promovida");
 		}
 		if (!type.equals("B") && !type.equals("N") && !type.equals("R") & !type.equals("Q")) {
 			return promoted;
@@ -256,19 +250,19 @@ public class ChessMatch {
 	
 	private void validateSourcePosition(Position position) {
 		if (!board.thereIsAPiece(position)) {
-			throw new ChessException("There is no piece on source position");
+			throw new ChessException("Não há peça na posição de origem");
 		}
 		if (currentPlayer != ((ChessPiece)board.piece(position)).getColor()) {
-			throw new ChessException("The chosen piece is not yours");
+			throw new ChessException("A peça escolhida não é sua");
 		}
 		if (!board.piece(position).isThereAnyPossibleMove()) {
-			throw new ChessException("There is no possible moves for the chosen piece");
+			throw new ChessException("Não há movimentos possíveis para a peça escolhida");
 		}
 	}
 	
 	private void validateTargetPosition(Position source, Position target) {
 		if (!board.piece(source).possibleMove(target)) {
-			throw new ChessException("The chosen piece can't move to target position");
+			throw new ChessException("Essa peça não pode ser movida para a posição alvo, tente novamente.");
 		}
 	}
 	
@@ -288,7 +282,7 @@ public class ChessMatch {
 				return (ChessPiece)p;
 			}
 		}
-		throw new IllegalStateException("There is no " + color + " king on the board");
+		throw new IllegalStateException("Não há rei " + color + " no tabuleiro");
 	}
 	
 	private boolean testCheck(Color color) {
@@ -331,6 +325,11 @@ public class ChessMatch {
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
 		piecesOnTheBoard.add(piece);
+	}
+
+	public void sendMessageForAll(String message) {
+		this.getCurrentPlayer().sendMessage(message);
+		this.getNextPlayer().sendMessage(message);
 	}
 	
 	private void initialSetup() {
