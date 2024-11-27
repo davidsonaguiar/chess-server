@@ -19,10 +19,7 @@ public class Player {
         this.player = socket;
         this.color = color;
         this.initialize();
-        outputMessage.println("Conectado ao servidor de xadrez");
-        outputMessage.println("Aguardando oponente");
-
-        System.out.println("Jogador conectado " + this.color);
+        outputMessage.println(color.getColor());
     }
 
     public Socket getSocket() {

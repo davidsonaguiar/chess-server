@@ -7,7 +7,6 @@ import com.fnrc.src.Server;
 import com.fnrc.src.chess.*;
 import com.fnrc.src.dto.DataChessMatch;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class Main {
@@ -18,18 +17,21 @@ class Main {
         Player playerTwo = new Player(server.acceptPlayer(), Color.BLACK);
 
         ChessMatch chessMatch = new ChessMatch(playerOne, playerTwo);
-        List<ChessPiece> captured = new ArrayList<>();
 
-        while (!chessMatch.getCheckMate()) {
-            try {
-                int currentTurn = chessMatch.getTurn();
-                System.out.println("Turno: " + currentTurn);
-                turnMessage(chessMatch, captured);
-            }
-            catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-            }
-        }
+        chessMatch.sendMessageForAll("match");
+
+//        List<ChessPiece> captured = new ArrayList<>();
+//
+//        while (!chessMatch.getCheckMate()) {
+//            try {
+//                int currentTurn = chessMatch.getTurn();
+//                System.out.println("Turno: " + currentTurn);
+//                turnMessage(chessMatch, captured);
+//            }
+//            catch (Exception e) {
+//                System.out.println("Error: " + e.getMessage());
+//            }
+//        }
 
         server.closeServer();
     }
