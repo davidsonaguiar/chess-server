@@ -1,4 +1,4 @@
-package com.fnrc.src;
+package com.fnrc;
 
 
 import java.io.IOException;
