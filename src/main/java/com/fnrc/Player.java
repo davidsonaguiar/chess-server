@@ -21,22 +21,6 @@ public class Player {
         outputMessage.println(color.getColor());
     }
 
-    public Socket getSocket() {
-        return this.player;
-    }
-
-    public Color getColor() {
-        return this.color;
-    }
-
-    public BufferedReader getInputMessage() {
-        return this.inputMessage;
-    }
-
-    public Player getOpponent() {
-        return this.opponent;
-    }
-
     public void setOpponent(Player opponent) {
         this.opponent = opponent;
     }
