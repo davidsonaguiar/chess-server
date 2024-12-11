@@ -1,11 +1,14 @@
 package com.fnrc;
 
+import com.fnrc.src.Color;
+import com.fnrc.src.Player;
 import com.fnrc.src.exception.ReceiveMessageException;
 import com.fnrc.src.Match;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.UnknownHostException;
 
 class Main {
@@ -19,7 +22,11 @@ class Main {
             System.out.println("Servidor rodando: " + host.getHostName() + ":" + port);
 
             while(true) {
-                new Match(server.accept(), server.accept()).start();
+                Player white = new Player(server.accept(), Color.WHITE);
+                white.sendMessage(Color.WHITE.getColor());
+                Player black = new Player(server.accept(), Color.BLACK);
+                black.sendMessage(Color.BLACK.getColor());
+                new Match(white, black).start();
             }
         }
         catch (IOException exception) {
