@@ -2,8 +2,6 @@ package com.fnrc.src;
 
 import com.fnrc.src.exception.ReceiveMessageException;
 
-import java.net.Socket;
-
 public class Match extends Thread {
     private final Player white;
     private final Player black;
